@@ -33,7 +33,7 @@ resource "aws_instance" "jenkins" {
     }
 
     provisioner "file" {
-       source = "../../cookbooks-jenkins-simple-app/berks-cookbooks"
+       source = "cookbooks/berks-cookbooks"
        destination = "/home/ubuntu/cookbooks"
     }
 

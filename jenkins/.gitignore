@@ -1,5 +1,3 @@
 *.pem
-*.backup
-*.tfstate
 terraform.tfvars
 cookbooks

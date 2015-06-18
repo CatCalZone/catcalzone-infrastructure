@@ -32,25 +32,21 @@ resource "aws_instance" "jenkins" {
         key_file = "${var.aws_key_name}.pem"
     }
 
-    provisioner "file" {
-       source = "cookbooks/berks-cookbooks"
-       destination = "/home/ubuntu/cookbooks"
-    }
-
-    provisioner "file" {
-       source = "config.rb"
-       destination = "/home/ubuntu/config.rb"
-    }
-
-    provisioner "file" {
-       source = "jenkins.json"
-       destination = "/home/ubuntu/jenkins.json"
-    }
-
-    provisioner "remote-exec" {
-        inline = [
-          "curl -L https://www.opscode.com/chef/install.sh | sudo bash",
-          "sudo chef-solo -c config.rb -j jenkins.json"
-        ]
+    provisioner "chef" {
+       attributes {
+            "chef_client" {
+                "interval" = 60
+            }
+            "jenkins_simple_app" {
+                "git_repository_url" = "http://github.com/CatCalZone/jenkins-jobs.git"
+            }
+       }
+       environment = "_default"
+       run_list = ["chef-client", "jenkins-simple-app"]
+       node_name = "pascal2"
+       server_url = "https://api.opscode.com/organizations/zuehlkeccz"
+       validation_client_name = "zuehlkeccz-validator"
+       validation_key_path = "zuehlkeccz-validator.pem"
+       version = "12.3.0"
     }
 }
